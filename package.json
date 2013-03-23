@@ -8,6 +8,6 @@
       "marked" : "0.2.8"
   },
   "scripts" : {
-    "postinstall" : "bash scripts/app_setup.sh",
+    "postinstall" : "bash ./setup.sh"
   }
 }
