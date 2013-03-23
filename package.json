@@ -1,0 +1,13 @@
+{
+  "name" : "emacs-javascript-bundle",
+  "version" : "0.0.1",
+  "engines" : { 
+      "node" : ">=0.10.0" 
+  },
+  "dependencies" : {
+      "marked" : "0.2.8"
+  },
+  "scripts" : {
+    "postinstall" : "bash scripts/app_setup.sh",
+  }
+}
