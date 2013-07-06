@@ -1,5 +1,5 @@
 // Filename: gfm-util.js  
-// Timestamp: 2013.03.22-20:04:24 (last modified)  
+// Timestamp: 2013.07.06-12:17:01 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 //
 // generate an html file from given markdown input, for use with emacs.
@@ -27,7 +27,7 @@ marked.setOptions({
 });
 
 if (input) {
-  fs.readFile(input, 'ascii', function (err, fd) {
+  fs.readFile(input, 'utf8', function (err, fd) {
     if (err) return console.log('[!!!] gfm-util: ' + err);
 
     fileName = input;
@@ -36,7 +36,21 @@ if (input) {
 
     fileNameNew = baseName + '.html';
     filePathNew = path.join(path.dirname(input), fileNameNew);
-    fileTextNew = marked(fd);
+
+    fileTextNew = marked(fd);    
+
+    if (true) {
+      fileTextNew = '' +
+        '<html>' +
+        '<head>' +
+        '<meta content="text/html; charset=utf-8" http-equiv="Content-Type">' +
+        '<meta charset="utf-8">' +
+        '</head>' + 
+        '<body>' +
+        fileTextNew +
+        '</body>' +
+        '</html>';
+    }
     
     fs.writeFile(fileNameNew, fileTextNew, function (err) {
       if (err) return console.log('[!!!] gfm-util: ' + err);
