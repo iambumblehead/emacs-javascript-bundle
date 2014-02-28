@@ -4,6 +4,7 @@
 (defvar *bundle-path* "~/Software/Emacs/emacs-javascript-bundle/")
 (defvar *json-parse-path* (concat *bundle-path* "json-parse.js"))
 (defvar *gfm-util-path* (concat *bundle-path* "gfm-util.js"))
+(defvar *pdf-util-path* (concat *bundle-path* "pdf-util.js"))
 
 (defun JSON () (interactive)
   "validate json"
@@ -14,6 +15,11 @@
   "create html from github-flavored markdown"
   (let ((file-name buffer-file-name))
     (shell-command (concat "node " *gfm-util-path* " -i " file-name))))
+
+(defun PDF () (interactive)
+  "create pdf from github-flavored markdown"
+  (let ((file-name buffer-file-name))
+    (shell-command (concat "node " *pdf-util-path* " -i " file-name))))
 
   
 
