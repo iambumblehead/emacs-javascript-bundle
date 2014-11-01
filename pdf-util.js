@@ -1,5 +1,5 @@
 // Filename: pdf-util.js  
-// Timestamp: 2014.02.24-22:54:13 (last modified)  
+// Timestamp: 2014.10.28-21:00:33 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 //
 // generate an html file from given markdown input, for use with emacs.
@@ -37,9 +37,11 @@ if (input) {
     fileName = input;
     fileExtn = path.extname(fileName);
     baseName = path.basename(fileName, fileExtn);
+    
+
 
     fileNameNew = baseName + '.html';
-    filePathNew = path.join(path.dirname(input), fileNameNew);
+    //filePathNew = path.join(path.dirname(input), fileNameNew);
 
     fileTextNew = marked(fd);    
 

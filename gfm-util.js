@@ -1,5 +1,5 @@
 // Filename: gfm-util.js  
-// Timestamp: 2013.07.06-12:17:01 (last modified)  
+// Timestamp: 2014.11.01-08:56:03 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 //
 // generate an html file from given markdown input, for use with emacs.
@@ -13,7 +13,13 @@ var fs = require('fs'),
     marked = require('marked'),
     input = argv.i || null,
     fileName, fileExtn, baseName,
-    fileNameNew, filePathNew, fileTextNew;
+    fileNameNew, filePathNew, fileTextNew,
+    stylesheetElem, dirname, 
+    baseNameCSS,
+    baseNameHTML,
+    pathfullCSS, 
+    pathfullHTML, 
+    isCSS;
 
 marked.setOptions({
   gfm : true,
@@ -33,28 +39,38 @@ if (input) {
     fileName = input;
     fileExtn = path.extname(fileName);
     baseName = path.basename(fileName, fileExtn);
+    dirname = path.dirname(input);
+    baseNameCSS = baseName + '.css';
+    baseNameHTML = baseName + '.html';
+    pathfullCSS = path.join(dirname, baseNameCSS);
+    pathfullHTML = path.join(dirname, baseNameHTML);
 
-    fileNameNew = baseName + '.html';
-    filePathNew = path.join(path.dirname(input), fileNameNew);
+    fs.stat(pathfullCSS, function(err, stat) {
+      isCSS = stat && stat.isFile();
 
-    fileTextNew = marked(fd);    
+      fileNameNew = baseName + '.html';
+      filePathNew = path.join(path.dirname(input), fileNameNew);
 
-    if (true) {
+      fileTextNew = marked(fd);    
       fileTextNew = '' +
         '<html>' +
-        '<head>' +
-        '<meta content="text/html; charset=utf-8" http-equiv="Content-Type">' +
-        '<meta charset="utf-8">' +
-        '</head>' + 
-        '<body>' +
+        '  <head>' +
+        '    <meta content="text/html" charset="utf-8" http-equiv="Content-Type">' +
+        '    <meta charset="utf-8">' + (isCSS ? 
+        '    <link rel="stylesheet" type="text/css" href="./:baseName">'
+             .replace(/:basename/gi, baseNameCSS) : '') +
+        '  </head>' + 
+        '  <body>' +
         fileTextNew +
-        '</body>' +
+        '  </body>' +
         '</html>';
-    }
-    
-    fs.writeFile(fileNameNew, fileTextNew, function (err) {
-      if (err) return console.log('[!!!] gfm-util: ' + err);
-      console.log('[mmm] gfm-util: wrote ' + fileNameNew);
+      
+      fs.writeFile(fileNameNew, fileTextNew, function (err) {
+        if (err) return console.log('[!!!] gfm-util: ' + err);
+        console.log('[mmm] gfm-util: wrote ' + fileNameNew);
+      });
+
     });
+
   });
 }
