@@ -10,6 +10,9 @@ A bundle to ease web-development using emacs and node.js to:
   1. Check if the buffer-file is valid JSON formatted string
   2. Generate an html file from a markdown buffer-file
 
+
+[0]: http://www.bumblehead.com                            "bumblehead"
+
 ---------------------------------------------------------
 #### <a id="install"></a>INSTALL:
 
