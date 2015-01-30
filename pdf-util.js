@@ -1,5 +1,5 @@
 // Filename: pdf-util.js  
-// Timestamp: 2015.01.30-12:40:17 (last modified)  
+// Timestamp: 2015.01.30-12:49:07 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 //
 // generate an html file from given markdown input, for use with emacs.
@@ -28,9 +28,7 @@ function writeMDtoPDF (mdfilepath, fn) {
       + '--run-script \'document.body.className="pdf";\' ' 
       + '--margin-left 0mm --margin-right 0mm --margin-top 0mm ' 
       + namehtml + ' ' + namepdf, function(err, stdout, stderr) {
-        if (err) return console.log('Error writing pdf: ' + err);
-
-        console.log('[mmm] pdf-util: wrote ' + namepdf);
+        fn(err, namepdf);
       });      
   });
 }
