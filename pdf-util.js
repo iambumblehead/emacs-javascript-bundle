@@ -1,5 +1,5 @@
 // Filename: pdf-util.js  
-// Timestamp: 2014.10.28-21:00:33 (last modified)  
+// Timestamp: 2015.01.30-12:40:17 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 //
 // generate an html file from given markdown input, for use with emacs.
@@ -10,72 +10,37 @@
 // to use this, you'll need the wkhtmltopdf binary,
 // http://wkhtmltopdf.org/
 
-var fs = require('fs'),
-    path = require('path'),
-    argv = require('optimist').argv,
-    marked = require('marked'),
+var argv = require('optimist').argv,
     exec = require('child_process').exec,
     input = argv.i || null,
-    fileName, fileExtn, baseName,
-    fileNameNew, filePathNew, fileTextNew;
+    gfmutil = require('./gfm-util.js');
 
-marked.setOptions({
-  gfm : true,
-  breaks : true,
-  highlight: function(code, lang) {
-    if (lang === 'js') {
-      return marked.highlighter.javascript(code);
-    }
-    return code;
-  }
-});
+function writeMDtoPDF (mdfilepath, fn) {
+  gfmutil.writeMDtoHTML(mdfilepath, function (err, namehtml) {
+    if (err) return fn(err);
 
-if (input) {
-  fs.readFile(input, 'utf8', function (err, fd) {
-    if (err) return console.log('[!!!] pdf-util: ' + err);
+      var namepdf = namehtml.replace(/html/, 'pdf'),
+          wkhtmltopdfbin = '~/Software/wkhtmltox/bin/wkhtmltopdf';
 
-    fileName = input;
-    fileExtn = path.extname(fileName);
-    baseName = path.basename(fileName, fileExtn);
-    
-
-
-    fileNameNew = baseName + '.html';
-    //filePathNew = path.join(path.dirname(input), fileNameNew);
-
-    fileTextNew = marked(fd);    
-
-    if (true) {
-      fileTextNew = '' +
-        '<html>' +
-        '  <head>' +
-        '    <meta content="text/html" charset="utf-8" http-equiv="Content-Type">' +
-        '    <meta charset="utf-8">' +
-        '    <link rel="stylesheet" type="text/css" href="./:baseName.css">' +
-        '  </head>' + 
-        '  <body>' +
-        fileTextNew +
-        '  </body>' +
-        '</html>';
-
-      fileTextNew = fileTextNew.replace(/:baseName/, baseName);
-    }
-    
-    fs.writeFile(fileNameNew, fileTextNew, function (err) {
-      if (err) return console.log('[!!!] pdf-util: ' + err);
-
-      var fileNameNewPDF = fileNameNew.replace(/html/, 'pdf');
-      var wkhtmltopdfbin = '~/Software/wkhtmltox/bin/wkhtmltopdf';
-
-      console.log('[mmm] gfm-util: wrote ' + fileNameNew);
-
-      return exec(wkhtmltopdfbin + ' ' + fileNameNew + ' ' + fileNameNewPDF, function(err, stdout, stderr) {
+      return exec(wkhtmltopdfbin + ' ' 
+      + '--print-media-type ' 
+      + '--page-size letter '
+      + '--run-script \'document.body.className="pdf";\' ' 
+      + '--margin-left 0mm --margin-right 0mm --margin-top 0mm ' 
+      + namehtml + ' ' + namepdf, function(err, stdout, stderr) {
         if (err) return console.log('Error writing pdf: ' + err);
 
-        console.log('[mmm] pdf-util: wrote ' + fileNameNewPDF);
+        console.log('[mmm] pdf-util: wrote ' + namepdf);
       });      
+  });
+}
 
-
-    });
+if (input) {
+  writeMDtoPDF(input, function (err, namepdf) {
+    if (err) {
+      console.log('[!!!] pdf-util: ' + err);
+    } else {
+      console.log('[mmm] pdf-util: wrote ' + namepdf);
+    }
   });
 }
