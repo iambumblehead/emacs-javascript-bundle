@@ -1,5 +1,5 @@
 // Filename: gfm-util.js  
-// Timestamp: 2015.01.30-12:26:02 (last modified)  
+// Timestamp: 2015.02.17-11:09:54 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 //
 // generate an html file from given markdown input, for use with emacs.
@@ -53,7 +53,7 @@ function writeMDtoHTML (mdfilepath, fn) {
         pathhtml = path.join(dir, namehtml);
 
     isfile(pathcss, function(err, iscss) {
-      text = htmltpl
+      var text = htmltpl
         .replace(/:body/, marked(fd))
         .replace(/<\/head>/, function () {
           return (iscss ? csslinktpl.replace(/:n/gi, namecss) : '') + '</head>';
