@@ -1,5 +1,5 @@
 // Filename: pdf-util.js  
-// Timestamp: 2015.01.30-12:49:07 (last modified)  
+// Timestamp: 2015.03.26-17:43:13 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 //
 // generate an html file from given markdown input, for use with emacs.
@@ -20,7 +20,7 @@ function writeMDtoPDF (mdfilepath, fn) {
     if (err) return fn(err);
 
       var namepdf = namehtml.replace(/html/, 'pdf'),
-          wkhtmltopdfbin = '~/Software/wkhtmltox/bin/wkhtmltopdf';
+          wkhtmltopdfbin = 'wkhtmltopdf'; // make sure this binary in $PATH
 
       return exec(wkhtmltopdfbin + ' ' 
       + '--print-media-type ' 

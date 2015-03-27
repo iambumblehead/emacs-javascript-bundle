@@ -14,7 +14,7 @@ emacs-javascript-bundle
 
  3. **Generate PDF from a Markdown buffer**
  
- > `M-x GFM` 
+ > `M-x PDF` 
 
 
 [0]: http://www.bumblehead.com                            "bumblehead"
