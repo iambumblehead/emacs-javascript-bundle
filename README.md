@@ -93,3 +93,10 @@ $ cd emacs-javascript-bundle && npm install
 ```lisp
 (load-file "~/path/to/emacs-javascript-bundle/conf.el")
 ```
+
+Additionally, you'll need `wkhtmltopdf`. Some distributions provide older packages of the binary and you may need to download and compile newer sources for yourself, adding the new binary to your PATH.
+
+*~/.bashrc*
+```bash
+export PATH=$PATH:/path/to/wkhtmltox/bin
+```
