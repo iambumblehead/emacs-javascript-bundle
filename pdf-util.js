@@ -33,7 +33,7 @@ function writeMDtoPDF (mdfilepath, fn) {
   });
 }
 
-if (input) {
+if (require.main === module && input) {
   writeMDtoPDF(input, function (err, namepdf) {
     if (err) {
       console.log('[!!!] pdf-util: ' + err);
@@ -42,3 +42,4 @@ if (input) {
     }
   });
 }
+

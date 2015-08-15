@@ -1,5 +1,5 @@
 // Filename: gfm-util.js  
-// Timestamp: 2015.03.26-17:10:15 (last modified)  
+// Timestamp: 2015.06.07-17:02:23 (last modified)  
 // Author(s): Bumblehead (www.bumblehead.com)
 //
 // generate an html file from given markdown input, for use with emacs.
@@ -126,7 +126,11 @@ function writeMDtoHTML (mdfilepath, fn) {
   });
 }
 
-if (input) {
+if (require.main === module && input) {
+  if (typeof input !== 'string') {
+    throw new Error('input must be a path (string)');
+  }
+  
   writeMDtoHTML(input, function (err, namehtml) {
     if (err) {
       console.log('[!!!] gfm-util: ' + err);

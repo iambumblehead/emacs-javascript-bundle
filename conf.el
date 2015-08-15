@@ -6,20 +6,33 @@
 (defvar *gfm-util-path* (concat *bundle-path* "gfm-util.js"))
 (defvar *pdf-util-path* (concat *bundle-path* "pdf-util.js"))
 
-(defun JSON () (interactive)
+(defun is-name-valid? (&optional name)
+  (when name (equal (stringp name) t)))
+
+(defun JSON ()
+  (interactive)
   "validate json"
   (let ((file-name buffer-file-name))
-    (shell-command (concat "node " *json-parse-path* " -i " file-name))))
-
-(defun GFM () (interactive)
+    (if (is-name-valid? file-name)    
+        (shell-command (concat "node " *json-parse-path* " -i " file-name))
+      (warn "buffer-file-name is required"))))
+  
+(defun GFM ()
+  (interactive)
   "create html from github-flavored markdown"
   (let ((file-name buffer-file-name))
-    (shell-command (concat "node " *gfm-util-path* " -i " file-name))))
+    (if (is-name-valid? file-name)    
+        (shell-command (concat "node " *gfm-util-path* " -i " file-name))
+      (warn "buffer-file-name is required"))))
 
-(defun PDF () (interactive)
+(defun PDF ()
+  (interactive)
   "create pdf from github-flavored markdown"
-  (let ((file-name buffer-file-name))
-    (shell-command (concat "node " *pdf-util-path* " -i " file-name))))
+  (let ((file-name buffer-file-name))  
+    (if (is-name-valid? file-name)
+        (shell-command (concat "node " *pdf-util-path* " -i " file-name))
+      (warn "buffer-file-name is required"))))
+
 
   
 
