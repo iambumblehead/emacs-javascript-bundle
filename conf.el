@@ -1,10 +1,13 @@
 ;; auto-load this file into emacs with the following in .emacs
-;; (load-file "~/Software/Emacs/jsPower.el")
+;; (load-file "~/path/to/emacs-javascript-bundle/conf.el")
 
-(defvar *bundle-path* "~/Software/Emacs/emacs-javascript-bundle/")
+
+(defvar *bundle-path* (file-name-directory load-file-name))
+  
 (defvar *json-parse-path* (concat *bundle-path* "json-parse.js"))
 (defvar *gfm-util-path* (concat *bundle-path* "gfm-util.js"))
 (defvar *pdf-util-path* (concat *bundle-path* "pdf-util.js"))
+
 
 (defun is-name-valid? (&optional name)
   (when name (equal (stringp name) t)))
