@@ -16,6 +16,10 @@ emacs-javascript-bundle
  
  > `M-x PDF` 
 
+ 4. **Generate VDOM from a Mustache buffer**
+ 
+ > `M-x VDOM` 
+
 
 [0]: http://www.bumblehead.com                            "bumblehead"
 
