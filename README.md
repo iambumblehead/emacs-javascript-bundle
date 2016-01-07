@@ -10,6 +10,7 @@ Make commands available to emacs,
  3. `M-x PDF` to generate PDF from a Markdown buffer
  4. `M-x VDOM` to generate VDOM from an HTML buffer
 
+
 When HTML markup is generated from a markdown file, a check is made for the existence
 of a css or js file on the same path as the markdown file. If a css or js file is found
 a reference to it is included in the output HTML. for example:
@@ -67,6 +68,7 @@ Results in an HTML with the following. For convenience `lazyload` is defined and
 
 ---------------------------------------------------------
 #### <a id="install"></a>install
+
 
 ```bash
 $ git clone https://github.com/iambumblehead/emacs-javascript-bundle.git
