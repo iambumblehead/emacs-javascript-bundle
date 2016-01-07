@@ -1,33 +1,17 @@
 emacs-javascript-bundle
 =======================
-**(c)[Bumblehead][0], 2015** [MIT-license](#license)  
 
-### OVERVIEW:
+**(c)[Bumblehead][0], 2015** [MIT-license](#license)
 
- 1. **Validate a JSON buffer**
- 
- > `M-x JSON`
- 
- 2. **Generate HTML from a Markdown buffer**
- 
- > `M-x GFM`
+Make commands available to emacs,
 
- 3. **Generate PDF from a Markdown buffer**
- 
- > `M-x PDF` 
-
- 4. **Generate VDOM from a Mustache buffer**
- 
- > `M-x VDOM` 
-
-
-[0]: http://www.bumblehead.com                            "bumblehead"
-
----------------------------------------------------------
-#### <a id="details"></a>DETAILS:
+ 1. `M-x JSON` to validate a JSON buffer
+ 2. `M-x GFM` to generate HTML from a Markdown buffer
+ 3. `M-x PDF` to generate PDF from a Markdown buffer
+ 4. `M-x VDOM` to generate VDOM from an HTML buffer
 
 When HTML markup is generated from a markdown file, a check is made for the existence
-of a css and js file on the same path as the markdown file. If a css or js file is found
+of a css or js file on the same path as the markdown file. If a css or js file is found
 a reference to it is included in the output HTML. for example:
 
 Converting the markdown file in this directory: 
@@ -80,12 +64,9 @@ Results in an HTML with the following. For convenience `lazyload` is defined and
   </body>
 </html>
 ```
-    
-
-
 
 ---------------------------------------------------------
-#### <a id="install"></a>INSTALL:
+#### <a id="install"></a>install
 
 ```bash
 $ git clone https://github.com/iambumblehead/emacs-javascript-bundle.git
@@ -104,3 +85,6 @@ Additionally, you'll need `wkhtmltopdf`. Some distributions provide older packag
 ```bash
 export PATH=$PATH:/path/to/wkhtmltox/bin
 ```
+
+
+[0]: http://www.bumblehead.com                            "bumblehead"

@@ -77,7 +77,7 @@ function getHTMLwithJS (HTMLStr, ogfilename, fn) {
         '</script>',
       jslazyload = '' +
         '<script type="text/javascript">\n' +
-        '' + fs.readFileSync(path.join(__dirname, './node_modules/lazyload/lazyload.js'), 'utf-8') +
+        '' + fs.readFileSync(path.join(__dirname, './../node_modules/lazyload/lazyload.js'), 'utf-8') +
         '</script>';
 
   getMatchedFilenameExtnExist(ogfilename, 'js', function (err, jsfilepath) {
