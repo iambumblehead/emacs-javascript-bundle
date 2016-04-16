@@ -20,7 +20,7 @@ function writeMDtoPDF (mdfilepath, fn) {
     if (err) return fn(err);
 
       var namepdf = namehtml.replace(/html/, 'pdf'),
-          wkhtmltopdfbin = 'wkhtmltopdf'; // make sure this binary in $PATH
+          wkhtmltopdfbin = '~/software/wkhtmltox/bin/wkhtmltopdf'; // make sure this binary in $PATH
 
       return exec(wkhtmltopdfbin + ' ' 
       + '--print-media-type ' 

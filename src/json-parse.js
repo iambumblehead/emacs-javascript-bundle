@@ -12,7 +12,7 @@ var fs = require('fs'),
     input = argv.i || null;
 
 if (input) {
-  fs.readFile(input, 'ascii', function (err, fd) {
+  fs.readFile(input, 'utf-8', function (err, fd) {
     if (err) {
       console.log('[!!!] json-parse: ' + err);
     } else if (JSON.parse(fd)) {
