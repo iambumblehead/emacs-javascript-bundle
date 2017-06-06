@@ -1,6 +1,6 @@
 {
   "name" : "emacs-javascript-bundle",
-  "version" : "0.0.5",
+  "version" : "0.0.6",
   "license" : "MIT",
   "repository": {
     "type": "git",
@@ -10,8 +10,8 @@
     "node" : ">=0.10.0" 
   },
   "dependencies" : {
-    "marked" : "0.2.x",
-    "highlight.js" : "8.4.x",
+    "marked" : "^0.3.6",
+    "highlight.js" : "^9.10.0",
     "escodegen": "1.7.x",
     "esprima": "2.7.x",    
     "optimist" : "0.6.1",
