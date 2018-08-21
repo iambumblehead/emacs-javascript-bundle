@@ -9,8 +9,6 @@ var fs = require('fs'),
     input = argv.i || null,
     beautify = require('js-beautify').js_beautify,
     
-    escodegen = require('escodegen'),
-    esprima = require('esprima'),
     compile = require('html2hyperscript');
 
 function readFile (fpath, fn) {

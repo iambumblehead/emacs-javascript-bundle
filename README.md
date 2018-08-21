@@ -1,7 +1,7 @@
 emacs-javascript-bundle
 =======================
 
-**(c)[Bumblehead][0], 2015** [MIT-license](#license)
+**(c)[Bumblehead][0]** [MIT-license](#license)
 
 Make commands available to emacs,
 
@@ -9,11 +9,10 @@ Make commands available to emacs,
  2. `M-x GFM` to generate HTML from a Markdown buffer
  3. `M-x PDF` to generate PDF from a Markdown buffer
  4. `M-x VDOM` to generate VDOM from an HTML buffer
+ 5. `M-x FURI` to generate furigana from a selection of kanji
 
 
-When HTML markup is generated from a markdown file, a check is made for the existence
-of a css or js file on the same path as the markdown file. If a css or js file is found
-a reference to it is included in the output HTML. for example:
+When HTML markup is generated from a markdown file, a check is made for the existence of a css or js file on the same path as the markdown file. If a css or js file is found a reference to it is included in the output HTML. for example:
 
 Converting the markdown file in this directory: 
  - `/path/to/my/file.md`

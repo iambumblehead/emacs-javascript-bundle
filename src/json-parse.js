@@ -6,13 +6,13 @@
 // 
 // `node json-parse.js -i /path/to/jsonFile.json`
 
-var fs = require('fs'),
-    path = require('path'),
-    argv = require('optimist').argv,
-    input = argv.i || null;
+const fs = require('fs'),
+      path = require('path'),
+      argv = require('optimist').argv,
+      input = argv.i || null;
 
 if (input) {
-  fs.readFile(input, 'utf-8', function (err, fd) {
+  fs.readFile(input, 'utf-8', (err, fd) => {
     if (err) {
       console.log('[!!!] json-parse: ' + err);
     } else if (JSON.parse(fd)) {
