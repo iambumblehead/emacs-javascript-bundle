@@ -26,10 +26,12 @@ const writeMDtoPDF = (mdfilepath, fn) => {
   gfmutil.writeMDtoHTML(mdfilepath, (err, namehtml) => {
     if (err) return fn(err);
 
-      const namepdf = namehtml.replace(/html/, 'pdf')
-      const wkhtmltopdfbin = 'wkhtmltopdf'; // make sure this binary in $PATH
+    const namepdf = namehtml.replace(/html/, 'pdf')
+    const wkhtmltopdfbin = 'wkhtmltopdf'; // make sure this binary in $PATH
 
-      return exec(wkhtmltopdfbin + ' ' 
+    // perhaps add .letter to classname
+    // and perhaps update css to use local font files
+    return exec(wkhtmltopdfbin + ' ' 
       + '--print-media-type ' 
       + '--page-size letter '
       + '--run-script \'document.body.className="pdf";\' ' 

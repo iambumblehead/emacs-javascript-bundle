@@ -16,9 +16,6 @@ import hljs from 'highlight.js'
 const inputarg = process.argv
   .find(arg => /^--i=/.test(arg))
 const input = inputarg && inputarg.split('=')[1]
-if (typeof input !== 'string') {
-  throw new Error('input must be a path (string)');
-}
 
 const pgmdmarked = new Marked(
   markedHighlight({
@@ -135,13 +132,18 @@ const writeMDtoHTML = (mdfilepath, fn) => {
     });
   });
 }
-  
-writeMDtoHTML(input, (err, namehtml) => {
-  if (err) {
-    console.log('[!!!] gfm-util: ' + err)
-  } else {
-    console.log('[mmm] gfm-util: wrote ' + namehtml)
+
+if (process.argv.find(arg => /gfm-util\.js/.test(arg))) {
+  if (typeof input !== 'string') {
+    throw new Error('input must be a path (string)');
   }
-})
+  writeMDtoHTML(input, (err, namehtml) => {
+    if (err) {
+      console.log('[!!!] gfm-util: ' + err)
+    } else {
+      console.log('[mmm] gfm-util: wrote ' + namehtml)
+    }
+  })
+}
 
 export default writeMDtoHTML
