@@ -43,53 +43,52 @@ const htmltpl = `
 </html>
 `.slice(1, -1)
 
-function isfile (filepath, fn) {
-  fs.stat(filepath, function(err, stat) {
+const isfile = (filepath, fn) => {
+  fs.stat(filepath, (err, stat) => {
     return err ? fn(err) : fn(null , stat && stat.isFile());
-  });
+  })
 }
 
-function getMatchedFilenameExtn (ogfilename, newextn) {
-  var dir = path.dirname(ogfilename),
-      extn = path.extname(ogfilename),
-      name = path.basename(ogfilename, extn),
-      namehtml = name + '.' + newextn;
+const getMatchedFilenameExtn = (ogfilename, newextn) => {
+  const dir = path.dirname(ogfilename)
+  const extn = path.extname(ogfilename)
+  const name = path.basename(ogfilename, extn)
+  const namehtml = name + '.' + newextn
 
   return path.join(dir, namehtml);
 }
 
-function getMatchedFilenameExtnExist (ogfilename, newextn, fn) {
-  var matchfilename = getMatchedFilenameExtn(ogfilename, newextn);
+const getMatchedFilenameExtnExist = (ogfilename, newextn, fn) => {
+  const matchfilename = getMatchedFilenameExtn(ogfilename, newextn);
 
-  isfile(matchfilename, function(err, file) {
-    err ? fn(err) : fn(null, matchfilename);
-  });
+  isfile(matchfilename, (err, file) => {
+    err ? fn(err) : fn(null, matchfilename)
+  })
 }
 
-function getHTMLwithBody (HTMLStr, ogfilename, fn) {
-  fs.readFile(ogfilename, 'utf8', function (err, fd) {
+const getHTMLwithBody = (HTMLStr, ogfilename, fn) => {
+  fs.readFile(ogfilename, 'utf8', (err, fd) => {
     if (err) return fn(err);
 
-    fn(null, HTMLStr.replace(/:body/, pgmdmarked.parse(fd)));
-  });
+    fn(null, HTMLStr.replace(/:body/, pgmdmarked.parse(fd)))
+  })
 }
 
-function getHTMLwithCSS (HTMLStr, ogfilename, fn) {
-  var csslinktpl = 
-        '<link rel="stylesheet" type="text/css" href="./:n">';
+const getHTMLwithCSS = (HTMLStr, ogfilename, fn) => {
+  const csslinktpl = 
+    '<link rel="stylesheet" type="text/css" href="./:n">';
 
-  getMatchedFilenameExtnExist(ogfilename, 'css', function (err, cssfilepath) {
+  getMatchedFilenameExtnExist(ogfilename, 'css', (err, cssfilepath) => {
     if (cssfilepath) {
-      HTMLStr = HTMLStr.replace(/<\/head>/, function () {
-        return csslinktpl.replace(/:n/gi, path.basename(cssfilepath)) + '</head>';
-      });
+      HTMLStr = HTMLStr.replace(/<\/head>/, () => (
+        csslinktpl.replace(/:n/gi, path.basename(cssfilepath)) + '</head>'))
     }
 
     fn(null, HTMLStr);
   });
 }
 
-function getHTMLwithJS (HTMLStr, ogfilename, fn) {
+const getHTMLwithJS = (HTMLStr, ogfilename, fn) => {
   const jslinktpl = 
     '<script type="text/javascript" src="./:n"></script>'
   const jsinittpl =
@@ -102,7 +101,7 @@ function getHTMLwithJS (HTMLStr, ogfilename, fn) {
   // '' + fs.readFileSync(path.join(__dirname, './../node_modules/lazyload/lazyload.js'), 'utf-8') +
   // '</script>';
 
-  getMatchedFilenameExtnExist(ogfilename, 'js', function (err, jsfilepath) {
+  getMatchedFilenameExtnExist(ogfilename, 'js', (err, jsfilepath) => {
     if (jsfilepath) {
       HTMLStr = HTMLStr
         .replace(/<\/head>/, () => jslazyload + '</head>')
@@ -110,7 +109,6 @@ function getHTMLwithJS (HTMLStr, ogfilename, fn) {
           .replace(/:n/gi, path.basename(jsfilepath)) + '</head>')
         .replace(/<\/body>/, () => jsinittpl
           .replace(/:name/gi, path.basename(jsfilepath, '.js')) + '</body>')
-      });      
     }
 
     fn(null, HTMLStr);
@@ -118,7 +116,7 @@ function getHTMLwithJS (HTMLStr, ogfilename, fn) {
 }
 
 const writeMDtoHTML = (mdfilepath, fn) => {
-  const pathhtml = getMatchedFilenameExtn(mdfilepath, 'html'),
+  const pathhtml = getMatchedFilenameExtn(mdfilepath, 'html')
 
   getHTMLwithBody(htmltpl, mdfilepath, (err, htmlstr) => {
     if (err) return fn(err);
