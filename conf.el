@@ -18,7 +18,7 @@
   "validate json"
   (let ((file-name buffer-file-name))
     (if (is-name-valid? file-name)    
-        (shell-command (concat "node " *json-parse-path* " -i " file-name))
+        (shell-command (concat "node " *json-parse-path* " -- -i " file-name))
       (warn "buffer-file-name is required"))))
   
 (defun GFM ()
@@ -26,7 +26,9 @@
   "create html from github-flavored markdown"
   (let ((file-name buffer-file-name))
     (if (is-name-valid? file-name)    
-        (shell-command (concat "node " *gfm-util-path* " -i " file-name))
+        (shell-command
+         (concat "cd " *bundle-path* "; "
+                 "npm run GFM -- --i=" file-name))
       (warn "buffer-file-name is required"))))
 
 (defun PDF ()
@@ -34,7 +36,7 @@
   "create pdf from github-flavored markdown"
   (let ((file-name buffer-file-name))  
     (if (is-name-valid? file-name)
-        (shell-command (concat "node " *pdf-util-path* " -i " file-name))
+        (shell-command (concat "node --i=" file-name " " *pdf-util-path*))
       (warn "buffer-file-name is required"))))
 
 (defun VDOM ()

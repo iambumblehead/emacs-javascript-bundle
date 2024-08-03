@@ -4,21 +4,26 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/iambumblehead/emacs-javascript-bundle.git"
+    "url": "git+https://github.com/iambumblehead/emacs-javascript-bundle.git"
   },
+  "type": "module",
   "engines": {
     "node": ">=0.10.0"
   },
   "dependencies": {
-    "marked": "^0.5.0",
-    "kuroshiro": "1.1.0",
+    "marked": "^13.0.3",
+    "marked-highlight": "^2.1.3",
+    "kuroshiro": "1.2.0",
     "kuroshiro-analyzer-kuromoji": "1.1.0",
-    "highlight.js": "^9.10.0",
-    "optimist": "0.6.1",
-    "html2hyperscript": "1.0.1",
-    "lazyload": "git+https://github.com/iambumblehead/lazyload.git#master"
+    "highlight.js": "^11.10.0",
+    "html2hyperscript": "1.0.1"
   },
   "scripts": {
-    "postinstall": "bash ./setup.sh"
+    "postinstall": "bash ./setup.sh",
+    "JSON": "node ./src/json-parse.js",
+    "GFM": "node ./src/gfm-util.js",
+    "PDF": "node ./src/pdf-util.js",
+    "VDOM": "node ./src/vdom-util.js",
+    "FURI": "node ./src/furi-util.js"
   }
 }
