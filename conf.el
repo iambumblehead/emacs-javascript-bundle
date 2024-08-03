@@ -17,15 +17,17 @@
   (interactive)
   "validate json"
   (let ((file-name buffer-file-name))
-    (if (is-name-valid? file-name)    
-        (shell-command (concat "node " *json-parse-path* " -- -i " file-name))
+    (if (is-name-valid? file-name)
+        (shell-command
+         (concat "cd " *bundle-path* "; "
+                 "npm run JSON -- --i=" file-name))
       (warn "buffer-file-name is required"))))
   
 (defun GFM ()
   (interactive)
   "create html from github-flavored markdown"
   (let ((file-name buffer-file-name))
-    (if (is-name-valid? file-name)    
+    (if (is-name-valid? file-name)
         (shell-command
          (concat "cd " *bundle-path* "; "
                  "npm run GFM -- --i=" file-name))
@@ -34,15 +36,17 @@
 (defun PDF ()
   (interactive)
   "create pdf from github-flavored markdown"
-  (let ((file-name buffer-file-name))  
+  (let ((file-name buffer-file-name))
     (if (is-name-valid? file-name)
-        (shell-command (concat "node --i=" file-name " " *pdf-util-path*))
+        (shell-command
+         (concat "cd " *bundle-path* "; "
+                 "npm run PDF -- --i=" file-name))
       (warn "buffer-file-name is required"))))
 
 (defun VDOM ()
   (interactive)
   "create vdom from mustache/handlebars markdown"
-  (let ((file-name buffer-file-name))  
+  (let ((file-name buffer-file-name))
     (if (is-name-valid? file-name)
         (shell-command (concat "node " *vdom-util-path* " -i " file-name))
       (warn "buffer-file-name is required"))))
@@ -50,8 +54,8 @@
 ;;
 ;; https://stackoverflow.com/questions/14201740/replace-region-with-result-of-calling-a-function-on-region
 ;;
-(defun apply-function-to-region (fn)   
-  (interactive "XFunction to apply to region: ")   
+(defun apply-function-to-region (fn)
+  (interactive "XFunction to apply to region: ")
   (save-excursion
     (let* ((beg (region-beginning))
            (end (region-end))

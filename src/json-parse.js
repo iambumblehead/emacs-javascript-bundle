@@ -6,10 +6,14 @@
 // 
 // `node json-parse.js -i /path/to/jsonFile.json`
 
-const fs = require('fs'),
-      path = require('path'),
-      argv = require('optimist').argv,
-      input = argv.i || null;
+import fs from 'node:fs'
+import path from 'node:path'
+const inputarg = process.argv
+  .find(arg => /^--i=/.test(arg))
+const input = inputarg && inputarg.split('=')[1]
+if (typeof input !== 'string') {
+  throw new Error('input must be a path (string)');
+}
 
 if (input) {
   fs.readFile(input, 'utf-8', (err, fd) => {
@@ -20,5 +24,5 @@ if (input) {
     } else {
       console.log('[!!!] json-parse: problem parsing file');
     }
-  });
+  })
 }
