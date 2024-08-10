@@ -29,7 +29,7 @@ const pgmdmarked = new Marked(
 )
 
 const htmltpl = `
-<html>
+<!DOCTYPE html>
   <head>
     <meta http-equiv="content-type" content="text/html" charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -38,6 +38,16 @@ const htmltpl = `
   </head>
   <body>:body</body>
 </html>
+`.slice(1, -1)
+
+const jslinktpl = `
+  <script type="text/javascript" src="./:n"></script>
+`.slice(1, -1)
+
+const jsinittpl = `
+<script type="text/javascript">' +
+  typeof :name === "object" && :name && typeof :name.start === "function" && :name.start();' +
+</script>
 `.slice(1, -1)
 
 const isfile = (filepath, fn) => {
@@ -86,12 +96,6 @@ const getHTMLwithCSS = (HTMLStr, ogfilename, fn) => {
 }
 
 const getHTMLwithJS = (HTMLStr, ogfilename, fn) => {
-  const jslinktpl = 
-    '<script type="text/javascript" src="./:n"></script>'
-  const jsinittpl =
-    '<script type="text/javascript">' +
-      '  typeof :name === "object" && :name && typeof :name.start === "function" && :name.start();' +
-      '</script>'
   const jslazyload = '' +
     ''
   // '<script type="text/javascript">\n' +
