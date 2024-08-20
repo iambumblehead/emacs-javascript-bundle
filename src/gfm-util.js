@@ -11,6 +11,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import {Marked} from 'marked'
 import {markedHighlight} from 'marked-highlight'
+import markedFootnote from 'marked-footnote'
 import hljs from 'highlight.js'
 
 const inputarg = process.argv
@@ -26,7 +27,9 @@ const pgmdmarked = new Marked(
       }).value
     }
   })
-)
+).use(markedFootnote())
+
+console.log('hasfootnote')
 
 const htmltpl = `
 <!DOCTYPE html>

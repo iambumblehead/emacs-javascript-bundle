@@ -13,6 +13,7 @@
   "dependencies": {
     "marked": "^14.0.0",
     "marked-highlight": "^2.1.4",
+    "marked-footnote": "^1.2.2",
     "kuroshiro": "1.2.0",
     "kuroshiro-analyzer-kuromoji": "1.1.0",
     "highlight.js": "^11.10.0",

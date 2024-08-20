@@ -53,7 +53,7 @@ const writeMDtoPDF = (mdfilepath, fn) => {
 
     const outputpdfhtmlstr = (await fs.readFile(inputhtml, 'utf8'))
       .replace('./index.css', './index.pdf.css')
-      .replace('<html>', '<html class="print">')
+      .replace('html>', 'html class="print">')
 
     await fs.writeFile(inputpdfhtml, outputpdfhtmlstr)
     await fs.mkdir(inputpdfassetsdirname, { recursive: true })
