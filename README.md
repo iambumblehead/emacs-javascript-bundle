@@ -25,9 +25,7 @@ Results in an HTML with the following:
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html" charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="./file.css">
   </head>
   <body>:body</body>
@@ -40,26 +38,23 @@ Converting the markdown file in this directory:
  - `/path/to/my/file.css`
  - `/path/to/my/file.js`
 
-Results in an HTML with the following. For convenience `lazyload` is defined and a scripted call to `start` on the name of the file is added.
+Results in an HTML with the following. For convenience a scripted call to `start` on the name of the file is added.
 
 */path/to/my/file.html*
 ```html
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html" charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="./file.css">
-    <script type="text/javascript">
-      var lazyload = /* lazyload.js */
-    </script>
     <script src="./file.js" type="text/javascript"></script>
   </head>
   <body>
     :body
     <script type="text/javascript">
-      typeof file === 'object' && file && typeof file.start === 'function' && file.start();
+      typeof file === 'object'
+          && file && typeof file.start === 'function'
+          && file.start()
     </script>
   </body>
 </html>
