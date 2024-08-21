@@ -11,11 +11,31 @@ import fs from 'node:fs'
 import path from 'node:path'
 import {Marked} from 'marked'
 import {markedHighlight} from 'marked-highlight'
+import markedFootnote from 'marked-footnote'
 import hljs from 'highlight.js'
 
 const inputarg = process.argv
   .find(arg => /^--i=/.test(arg))
 const input = inputarg && inputarg.split('=')[1]
+
+const htmltpl = (
+`<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>:body</body>
+</html>`)
+
+const jslinktpl = (
+  '<script type="text/javascript" src="./:n"></script>')
+
+const jsinittpl = (
+`<script type="text/javascript">
+  typeof :name === "object"
+    && :name && typeof :name.start === "function"
+    && :name.start()'
+</script>`)
 
 const pgmdmarked = new Marked(
   markedHighlight({
@@ -26,27 +46,7 @@ const pgmdmarked = new Marked(
       }).value
     }
   })
-)
-
-const htmltpl = `
-<!DOCTYPE html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-  <body>:body</body>
-</html>
-`.slice(1, -1)
-
-const jslinktpl = `
-  <script type="text/javascript" src="./:n"></script>
-`.slice(1, -1)
-
-const jsinittpl = `
-<script type="text/javascript">' +
-  typeof :name === "object" && :name && typeof :name.start === "function" && :name.start();' +
-</script>
-`.slice(1, -1)
+).use(markedFootnote())
 
 const isfile = (filepath, fn) => {
   fs.stat(filepath, (err, stat) => {
@@ -94,8 +94,7 @@ const getHTMLwithCSS = (HTMLStr, ogfilename, fn) => {
 }
 
 const getHTMLwithJS = (HTMLStr, ogfilename, fn) => {
-  const jslazyload = '' +
-    ''
+  const jslazyload = ''
   // '<script type="text/javascript">\n' +
   // '' + fs.readFileSync(path.join(__dirname, './../node_modules/lazyload/lazyload.js'), 'utf-8') +
   // '</script>';
