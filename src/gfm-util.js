@@ -28,13 +28,16 @@ const htmltpl = (
 </html>`)
 
 const jslinktpl = (
-  '<script type="text/javascript" src="./:n"></script>')
+  '<script type="text/javascript" type="module" src="./:n"></script>')
+
+const csslinktpl = (
+  '<link rel="stylesheet" type="text/css" href="./:n">')
 
 const jsinittpl = (
 `<script type="text/javascript">
   typeof :name === "object"
     && :name && typeof :name.start === "function"
-    && :name.start()'
+    && :name.start()
 </script>`)
 
 const pgmdmarked = new Marked(
@@ -80,9 +83,6 @@ const getHTMLwithBody = (HTMLStr, ogfilename, fn) => {
 }
 
 const getHTMLwithCSS = (HTMLStr, ogfilename, fn) => {
-  const csslinktpl = 
-    '<link rel="stylesheet" type="text/css" href="./:n">';
-
   getMatchedFilenameExtnExist(ogfilename, 'css', (err, cssfilepath) => {
     if (cssfilepath) {
       HTMLStr = HTMLStr.replace(/<\/head>/, () => (
