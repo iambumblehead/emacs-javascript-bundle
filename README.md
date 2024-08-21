@@ -22,7 +22,7 @@ Results in an HTML with the following:
 
 */path/to/my/file.html*
 ```html
-<html>
+<!DOCTYPE html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,7 +42,7 @@ Results in an HTML with the following. For convenience a scripted call to `start
 
 */path/to/my/file.html*
 ```html
-<html>
+<!DOCTYPE html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
