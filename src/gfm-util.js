@@ -18,6 +18,8 @@ const inputarg = process.argv
   .find(arg => /^--i=/.test(arg))
 const input = inputarg && inputarg.split('=')[1]
 
+const jslinktpl = '<script type="module" src="./:n"></script>'
+const csslinktpl = '<link rel="stylesheet" type="text/css" href="./:n">'
 const htmltpl = (
 `<!DOCTYPE html>
   <head>
@@ -26,12 +28,6 @@ const htmltpl = (
   </head>
   <body>:body</body>
 </html>`)
-
-const jslinktpl = (
-  '<script type="text/javascript" type="module" src="./:n"></script>')
-
-const csslinktpl = (
-  '<link rel="stylesheet" type="text/css" href="./:n">')
 
 const jsinittpl = (
 `<script type="text/javascript">
