@@ -53,31 +53,47 @@ const isfile = filepath => fs
   .then(stat => stat.isFile())
   .catch(() => false)
 
-const getMatchedFilenameExtn = (ogfilename, newextn) => {
+const tplAddToBody = (html, body) => html
+  .replace(/:body/, body)
+
+const tplAddToHead = (html, head) => html
+  .replace(/<\/head>/, () => head + '</head>')
+
+const getMatchedFilenameExtn = (ogfilename, newname, newextn) => {
   const dir = path.dirname(ogfilename)
   const extn = path.extname(ogfilename)
-  const name = path.basename(ogfilename, extn)
-  const namehtml = name + '.' + newextn
+  const name = newname || path.basename(ogfilename, extn)
 
-  return path.join(dir, namehtml);
+  return path.join(dir, name + '.' + newextn)
 }
 
-const getMatchedFilenameExtnExist = async (ogfilename, newextn) => {
-  const matchfilename = getMatchedFilenameExtn(ogfilename, newextn);
+const getMatchedFilenameFirst = async (ogfilename, newnametuple) => {
+  if (!newnametuple[0])
+    return
 
-  return (await isfile(matchfilename)) && matchfilename
+  const newname = newnametuple[0][0]
+  const newextn = newnametuple[0][1]
+  const matchfilename = getMatchedFilenameExtn(ogfilename, newname, newextn)
+
+  if (await isfile(matchfilename))
+    return matchfilename
+
+  return getMatchedFilenameFirst(ogfilename, newnametuple.slice(1))
 }
 
 const getHTMLwithBody = async (HTMLStr, ogfilename) => {
   const fd = await fs.readFile(ogfilename, 'utf8')
 
-  return fd && HTMLStr.replace(/:body/, pgmdmarked.parse(fd))
+  return tplAddToBody(HTMLStr, pgmdmarked.parse(fd))
 }
 
 const getHTMLwithCSS = async (HTMLStr, ogfilename) => {
-  const cssfilepath = await getMatchedFilenameExtnExist(ogfilename, 'css')
-  return cssfilepath ? HTMLStr
-    .replace(/<\/head>/, () => csslinktpl.replace(/:n/gi, path.basename(cssfilepath)) + '</head>')
+  const cssfilepath = await getMatchedFilenameFirst(ogfilename, [
+    [null, 'css'],
+    ['index', 'css']])
+
+  return cssfilepath
+    ? tplAddToHead(HTMLStr, csslinktpl.replace(/:n/gi, path.basename(cssfilepath)))
     : HTMLStr
 }
 
@@ -86,8 +102,8 @@ const getHTMLwithJS = async (HTMLStr, ogfilename) => {
   // '<script type="text/javascript">\n' +
   // '' + fs.readFileSync(path.join(__dirname, './../node_modules/lazyload/lazyload.js'), 'utf-8') +
   // '</script>';
-
-  const jsfilepath = await getMatchedFilenameExtnExist(ogfilename, 'js')
+  const jsfilepath = await getMatchedFilenameFirst(ogfilename, [
+    [null, 'js']])
   return jsfilepath ? HTMLStr
       .replace(/<\/head>/, () => jslazyload + '</head>')
       .replace(/<\/head>/, () => jslinktpl
@@ -98,7 +114,7 @@ const getHTMLwithJS = async (HTMLStr, ogfilename) => {
 }
 
 const writeMDtoHTML = async (mdfilepath, htmlstr) => {
-  const pathhtml = getMatchedFilenameExtn(mdfilepath, 'html')
+  const pathhtml = getMatchedFilenameExtn(mdfilepath, null, 'html')
 
   htmlstr = await getHTMLwithBody(htmltpl, mdfilepath)
   htmlstr = await getHTMLwithCSS(htmlstr, mdfilepath)
