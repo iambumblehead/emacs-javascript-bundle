@@ -4,10 +4,10 @@
 //
 // generate an html file from given markdown input, for use with emacs.
 // uses gfm (github-flavored-markup): https://github.com/chjj/marked
-// 
+//
 // `node gfm-util.js -i /path/to/markdownFile.md`
 
-import fs from 'node:fs'
+import fs from 'node:fs/promises'
 import path from 'node:path'
 import {Marked} from 'marked'
 import {markedHighlight} from 'marked-highlight'
@@ -22,11 +22,12 @@ const jslinktpl = '<script type="module" src="./:n"></script>'
 const csslinktpl = '<link rel="stylesheet" type="text/css" href="./:n">'
 const htmltpl = (
 `<!DOCTYPE html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-  <body>:body</body>
+<html xml:lang="en-US" lang="en-US">  
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>:body</body>
 </html>`)
 
 const jsinittpl = (
@@ -47,11 +48,10 @@ const pgmdmarked = new Marked(
   })
 ).use(markedFootnote())
 
-const isfile = (filepath, fn) => {
-  fs.stat(filepath, (err, stat) => {
-    return err ? fn(err) : fn(null , stat && stat.isFile());
-  })
-}
+const isfile = filepath => fs
+  .stat(filepath)
+  .then(stat => stat.isFile())
+  .catch(() => false)
 
 const getMatchedFilenameExtn = (ogfilename, newextn) => {
   const dir = path.dirname(ogfilename)
@@ -62,85 +62,64 @@ const getMatchedFilenameExtn = (ogfilename, newextn) => {
   return path.join(dir, namehtml);
 }
 
-const getMatchedFilenameExtnExist = (ogfilename, newextn, fn) => {
+const getMatchedFilenameExtnExist = async (ogfilename, newextn) => {
   const matchfilename = getMatchedFilenameExtn(ogfilename, newextn);
 
-  isfile(matchfilename, (err, file) => {
-    err ? fn(err) : fn(null, matchfilename)
-  })
+  return (await isfile(matchfilename)) && matchfilename
 }
 
-const getHTMLwithBody = (HTMLStr, ogfilename, fn) => {
-  fs.readFile(ogfilename, 'utf8', (err, fd) => {
-    if (err) return fn(err);
+const getHTMLwithBody = async (HTMLStr, ogfilename) => {
+  const fd = await fs.readFile(ogfilename, 'utf8')
 
-    fn(null, HTMLStr.replace(/:body/, pgmdmarked.parse(fd)))
-  })
+  return fd && HTMLStr.replace(/:body/, pgmdmarked.parse(fd))
 }
 
-const getHTMLwithCSS = (HTMLStr, ogfilename, fn) => {
-  getMatchedFilenameExtnExist(ogfilename, 'css', (err, cssfilepath) => {
-    if (cssfilepath) {
-      HTMLStr = HTMLStr.replace(/<\/head>/, () => (
-        csslinktpl.replace(/:n/gi, path.basename(cssfilepath)) + '</head>'))
-    }
-
-    fn(null, HTMLStr);
-  });
+const getHTMLwithCSS = async (HTMLStr, ogfilename) => {
+  const cssfilepath = await getMatchedFilenameExtnExist(ogfilename, 'css')
+  return cssfilepath ? HTMLStr
+    .replace(/<\/head>/, () => csslinktpl.replace(/:n/gi, path.basename(cssfilepath)) + '</head>')
+    : HTMLStr
 }
 
-const getHTMLwithJS = (HTMLStr, ogfilename, fn) => {
+const getHTMLwithJS = async (HTMLStr, ogfilename) => {
   const jslazyload = ''
   // '<script type="text/javascript">\n' +
   // '' + fs.readFileSync(path.join(__dirname, './../node_modules/lazyload/lazyload.js'), 'utf-8') +
   // '</script>';
 
-  getMatchedFilenameExtnExist(ogfilename, 'js', (err, jsfilepath) => {
-    if (jsfilepath) {
-      HTMLStr = HTMLStr
-        .replace(/<\/head>/, () => jslazyload + '</head>')
-        .replace(/<\/head>/, () => jslinktpl
-          .replace(/:n/gi, path.basename(jsfilepath)) + '</head>')
-        .replace(/<\/body>/, () => jsinittpl
-          .replace(/:name/gi, path.basename(jsfilepath, '.js')) + '</body>')
-    }
-
-    fn(null, HTMLStr);
-  });  
+  const jsfilepath = await getMatchedFilenameExtnExist(ogfilename, 'js')
+  return jsfilepath ? HTMLStr
+      .replace(/<\/head>/, () => jslazyload + '</head>')
+      .replace(/<\/head>/, () => jslinktpl
+        .replace(/:n/gi, path.basename(jsfilepath)) + '</head>')
+      .replace(/<\/body>/, () => jsinittpl
+        .replace(/:name/gi, path.basename(jsfilepath, '.js')) + '</body>')
+    : HTMLStr
 }
 
-const writeMDtoHTML = (mdfilepath, fn) => {
+const writeMDtoHTML = async (mdfilepath, htmlstr) => {
   const pathhtml = getMatchedFilenameExtn(mdfilepath, 'html')
 
-  getHTMLwithBody(htmltpl, mdfilepath, (err, htmlstr) => {
-    if (err) return fn(err);
+  console.log({ pathhtml })
+  htmlstr = await getHTMLwithBody(htmltpl, mdfilepath)
+  console.log({ htmlstr })
+  htmlstr = await getHTMLwithCSS(htmlstr, mdfilepath)
+  console.log({ htmlstr })
+  htmlstr = await getHTMLwithJS(htmlstr, mdfilepath)
+  console.log({ htmlstr })
 
-    getHTMLwithCSS(htmlstr, mdfilepath, (err, htmlstr) => {
-      if (err) return fn(err);
+  
+  await fs.writeFile(pathhtml, htmlstr)
 
-      getHTMLwithJS(htmlstr, mdfilepath, (err, htmlstr) => {
-        if (err) return fn(err);
-
-        fs.writeFile(pathhtml, htmlstr, err => {
-          if (err) return fn(err);
-          fn(null, path.basename(pathhtml));
-        });
-      });
-    });
-  });
+  return path.basename(pathhtml)
 }
 
 if (process.argv.find(arg => /gfm-util\.js/.test(arg))) {
   if (typeof input !== 'string') {
     throw new Error('input must be a path (string)');
   }
-  writeMDtoHTML(input, (err, namehtml) => {
-    if (err) {
-      console.log('[!!!] gfm-util: ' + err)
-    } else {
-      console.log('[mmm] gfm-util: wrote ' + namehtml)
-    }
-  })
+  const namehtml = await writeMDtoHTML(input)
+  console.log('[mmm] gfm-util: wrote ' + namehtml)
 }
 
 export default writeMDtoHTML
