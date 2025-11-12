@@ -100,15 +100,10 @@ const getHTMLwithJS = async (HTMLStr, ogfilename) => {
 const writeMDtoHTML = async (mdfilepath, htmlstr) => {
   const pathhtml = getMatchedFilenameExtn(mdfilepath, 'html')
 
-  console.log({ pathhtml })
   htmlstr = await getHTMLwithBody(htmltpl, mdfilepath)
-  console.log({ htmlstr })
   htmlstr = await getHTMLwithCSS(htmlstr, mdfilepath)
-  console.log({ htmlstr })
   htmlstr = await getHTMLwithJS(htmlstr, mdfilepath)
-  console.log({ htmlstr })
 
-  
   await fs.writeFile(pathhtml, htmlstr)
 
   return path.basename(pathhtml)
