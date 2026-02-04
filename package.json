@@ -17,9 +17,11 @@
     "kuroshiro": "1.2.0",
     "kuroshiro-analyzer-kuromoji": "1.1.0",
     "highlight.js": "^11.11.1",
-    "html2hyperscript": "1.0.1"
+    "html2hyperscript": "1.0.1",
+    "eslint": "^9.39.2"
   },
   "scripts": {
+    "lint": "eslint .",
     "postinstall": "bash ./setup.sh",
     "JSON": "node ./src/json-parse.js",
     "GFM": "node ./src/gfm-util.js",
