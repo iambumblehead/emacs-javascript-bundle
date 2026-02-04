@@ -1,7 +1,3 @@
-// Filename: gfm-util.js  
-// Timestamp: 2015.06.07-17:02:23 (last modified)  
-// Author(s): Bumblehead (www.bumblehead.com)
-//
 // generate an html file from given markdown input, for use with emacs.
 // uses gfm (github-flavored-markup): https://github.com/chjj/marked
 //
@@ -13,29 +9,29 @@ import {Marked} from 'marked'
 import {markedHighlight} from 'marked-highlight'
 import markedFootnote from 'marked-footnote'
 import hljs from 'highlight.js'
+import argvparse from './argvparse.js'
 
-const inputarg = process.argv
-  .find(arg => /^--i=/.test(arg))
-const input = inputarg && inputarg.split('=')[1]
+const input = argvparse(process.argv, 'i')
 
 const jslinktpl = '<script type="module" src="./:n"></script>'
 const csslinktpl = '<link rel="stylesheet" type="text/css" href="./:n">'
-const htmltpl = (
-`<!DOCTYPE html>
+
+const htmltpl = (`
+<!DOCTYPE html>
 <html xml:lang="en-US" lang="en-US">  
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>:body</body>
-</html>`)
+</html>`).slice(1)
 
-const jsinittpl = (
-`<script type="text/javascript">
+const jsinittpl = (`
+<script type="text/javascript">
   typeof :name === "object"
     && :name && typeof :name.start === "function"
     && :name.start()
-</script>`)
+</script>`).slice(1)
 
 const pgmdmarked = new Marked(
   markedHighlight({
@@ -93,23 +89,21 @@ const getHTMLwithCSS = async (HTMLStr, ogfilename) => {
     ['index', 'css']])
 
   return cssfilepath
-    ? tplAddToHead(HTMLStr, csslinktpl.replace(/:n/gi, path.basename(cssfilepath)))
+    ? tplAddToHead(HTMLStr,
+      csslinktpl.replace(/:n/gi, path.basename(cssfilepath)))
     : HTMLStr
 }
 
 const getHTMLwithJS = async (HTMLStr, ogfilename) => {
   const jslazyload = ''
-  // '<script type="text/javascript">\n' +
-  // '' + fs.readFileSync(path.join(__dirname, './../node_modules/lazyload/lazyload.js'), 'utf-8') +
-  // '</script>';
   const jsfilepath = await getMatchedFilenameFirst(ogfilename, [
     [null, 'js']])
   return jsfilepath ? HTMLStr
-      .replace(/<\/head>/, () => jslazyload + '</head>')
-      .replace(/<\/head>/, () => jslinktpl
-        .replace(/:n/gi, path.basename(jsfilepath)) + '</head>')
-      .replace(/<\/body>/, () => jsinittpl
-        .replace(/:name/gi, path.basename(jsfilepath, '.js')) + '</body>')
+    .replace(/<\/head>/, () => jslazyload + '</head>')
+    .replace(/<\/head>/, () => jslinktpl
+      .replace(/:n/gi, path.basename(jsfilepath)) + '</head>')
+    .replace(/<\/body>/, () => jsinittpl
+      .replace(/:name/gi, path.basename(jsfilepath, '.js')) + '</body>')
     : HTMLStr
 }
 
@@ -127,7 +121,7 @@ const writeMDtoHTML = async (mdfilepath, htmlstr) => {
 
 if (process.argv.find(arg => /gfm-util\.js/.test(arg))) {
   if (typeof input !== 'string') {
-    throw new Error('input must be a path (string)');
+    throw new Error('input must be a path (string)')
   }
   const namehtml = await writeMDtoHTML(input)
   console.log('[mmm] gfm-util: wrote ' + namehtml)
